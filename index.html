@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Railway Ticket Booking</title>
+<style>
+body {
+font-family: Arial, sans-serif; margin: 20px;
+padding: 20px;
+}
+
+h1 {
+color: #4CAF50;
+}
+form {
+max-width: 400px; margin: 0 auto; padding: 20px;
+border: 1px solid #ccc; background-color: #f9f9f9;
+}
+
+label {
+display: block; margin-bottom: 10px;
+}
+input {
+width: 100%; padding: 10px;
+ 
+margin: 10px 0; border: 1px solid #ccc; border-radius: 4px;
+}
+
+button {
+width: 100%; padding: 10px;
+background-color: #4CAF50; color: white;
+border: none; border-radius: 4px; cursor: pointer;
+}
+button:hover {
+background-color: #45a049;
+}
+#bookingDetails { margin-top: 20px;
+}
+</style>
+</head>
+<body>
+<h1>Book Your Railway Ticket</h1>
+<form id="bookTicketForm">
+<label for="trainNumber">Train Number:</label>
+<input type="text" id="trainNumber" name="trainNumber" required>
+<br>
+<label for="passengerName">Passenger Name:</label>
+<input type="text" id="passengerName" name="passengerName" required>
+<br>
+
+<label for="seatsBooked">Seats Booked:</label>
+<input type="number" id="seatsBooked" name="seatsBooked" required>
+<br>
+<button type="submit">Book Ticket</button>
+</form>
+ 
+<div id="bookingDetails"></div> <!-- For displaying booking confirmation -
+->
+<script>
+// Prevent form submission and handle it with fetch document.getElementById('bookTicketForm').addEventListener('submit',
+async (e) => {
+e.preventDefault(); // Prevent the default form submission
+const trainNumber = document.getElementById('trainNumber').value; const passengerName =
+document.getElementById('passengerName').value;
+const seatsBooked = document.getElementById('seatsBooked').value;
+const response = await fetch('/bookTicket', { method: 'POST',
+headers: {
+'Content-Type': 'application/json'
+},
+body: JSON.stringify({ trainNumber, passengerName, seatsBooked
+})
+});
+const data = await response.json(); // Parse the JSON response
+// Get the booking details div
+const bookingDetailsDiv = document.getElementById('bookingDetails');
+if (data.success) {
+// Display success message bookingDetailsDiv.innerHTML = `
+<h2>Booking Confirmed!</h2>
+<p>Passenger: ${data.passengerName}</p>
+<p>Train Number: ${data.trainNumber}</p>
+<p>Seats Booked: ${data.seatsBooked}</p>
+`;
+} else {
+// Display error message bookingDetailsDiv.innerHTML = `
+<h2>Error:</h2>
+ 
+<p>${data.message}</p>
+`;
+}
+});
+</script>
+</body>
+</html>
+
